@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Komodo Project File - DO NOT EDIT -->
+<project id="5ce59e90-768d-40ee-aaec-9c14b7351a90" kpf_version="4" name="test-socket-io-inet.kpg">
+<preference-set idref="5ce59e90-768d-40ee-aaec-9c14b7351a90">
+  <boolean id="import_live">1</boolean>
+</preference-set>
+</project>
