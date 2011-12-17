@@ -71,9 +71,39 @@ sub do_test {
 
 #Set up a connection cache?
 do_test();
-my $conn_cache = LWP::ConnCache->new(20);
+my $conn_cache = LWP::ConnCache->new(total_capacity => 20);
 diag "Testing with LWP::ConnCache";
 $ua->conn_cache($conn_cache);
 do_test();
+
+diag "Testing with more 'advanced' API";
+my @sock_args;
+mocksock_response(sub {
+    my ($blob,$request,$sargs) = @_;
+    push @sock_args, $sargs;
+    return
+        "HTTP/1.0 200 OK\r\n".
+        "\r\n".
+        scalar(reverse($request->uri));
+});
+$ua->use_eval(0);
+$ua->proxy("http", undef);
+my $resp = $ua->get("http://foo.org/xyz");
+is($resp->content, "zyx/", "Response Generator Handler (1/4)");
+$resp = $ua->get("http://bar.org/oof");
+is($resp->content, "foo/", "Response Generator Handler (2/4)");
+
+#bonus points
+my $tmp = shift @sock_args;
+is($tmp->{PeerAddr}, 'foo.org', "Response Generator Handler (socket args), (3/4)");
+$tmp = shift @sock_args;
+is($tmp->{PeerAddr}, 'bar.org', "Response Generator Handler (socket args), (3/4)");
+
+my $response_base = "HTTP/1.0 200 OK\r\n\r\n";
+mocksock_response([$response_base."First", $response_base."Second"]);
+$resp = $ua->get("http://www.foo.com");
+is($resp->content, "First", "Array (1/2)");
+$resp = $ua->get("http://blah.org");
+is($resp->content, "Second", "Array (2/2)");
 
 done_testing();

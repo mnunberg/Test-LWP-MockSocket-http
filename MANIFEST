@@ -3,7 +3,4 @@ MANIFEST
 Makefile.PL
 README
 lib/Test/LWP/MockSocket/http.pm
-t/00-load.t
-t/manifest.t
-t/pod-coverage.t
-t/pod.t
+t/00-basic.t
