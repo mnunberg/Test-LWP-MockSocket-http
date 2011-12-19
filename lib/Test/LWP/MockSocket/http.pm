@@ -17,7 +17,7 @@ our @EXPORT = qw(
     mocksock_mode mocksock_response
 );
 
-our $VERSION = 0.04;
+our $VERSION = 0.05;
 our ($LWP_Response, $LWP_SocketArgs);
 
 my $MODE = HT_MOCKSOCK_PERSIST;
